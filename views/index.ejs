@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <meta charset="UTF-8">
+        <title>Dice Game</title>
+    </head>
+    <link rel = "stylesheet" type = "text/css" href = "../stylesheets/style.css" />
+    <body>
+        <div class="row" align="center">
+            <div class="col-4">
+                <h3 id="usr1" class="usr-cls active">Player 1</h3>
+                Score: <span id="1" class="user_score">0</span>
+            </div>
+            <div class="col-4">
+                <h3 id="usr2" class="usr-cls">Player 2</h3>
+                Score: <span id="2" class="user_score">0</span>
+            </div>
+            <div class="col-4">
+                <h3 id="usr3" class="usr-cls">Player 3</h3>
+                Score: <span id="3" class="user_score">0</span>
+            </div>
+            <div class="col-4">
+                <h3 id="usr4" class="usr-cls">Player 4</h3>
+                Score: <span id="4" class="user_score">0</span>
+            </div>
+            <br/>
+            <div class="col-4" align="center">
+            Timer: <span id="countdown">30</span>
+            <button class="greenBut" onClick="throwdice()">Play!</button>
+        </div>
+        </div>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            let winnig_score=61; 
+            let check_winner = function(){
+                let player1 = parseInt($('#1').html());
+                let player2 = parseInt($('#2').html());
+                let player3 = parseInt($('#3').html());
+                let player4 = parseInt($('#4').html());
+                if(player1>=winnig_score){
+                    alert(`Player 1 Won and score is ${player1}`);
+                    $('.user_score').html(0);
+                    $('#score').html(0);
+                } else if(player2>=winnig_score) {
+                    alert(`Player 2 Won and score is ${player2}`);
+                    $('.user_score').html(0);
+                    $('#score').html(0);
+                } else if(player3>=winnig_score) {
+                    alert(`Player 3 Won and score is ${player3}`);
+                    $('.user_score').html(0);
+                    $('#score').html(0);
+                } else if(player4>=winnig_score) {
+                    alert(`Player 4 Won and score is ${player4}`);
+                    $('.user_score').html(0);
+                   $('#score').html(0);
+                }
+            }
+            
+            let countdown;
+            let player_chance=1;
+            let repeat_chance=0;
+            let handler = function() {
+                if(player_chance>4){
+                    player_chance=1;
+                }
+                check_winner();
+                let user_score = $('#'+player_chance).html();
+                $('.usr-cls').removeClass('active');
+                $('#usr'+player_chance).addClass('active');
+                var seconds = 30;
+                countdown = setInterval(function() {
+                    seconds--;
+                    $('#countdown').html(seconds);
+                    if (seconds <= 0) 
+                    {
+                        clearInterval(countdown);
+                        let random_number = Math.round(Math.random()*5) + 1;
+                        $('#'+player_chance).html(parseInt(random_number) + parseInt(user_score));
+                        alert(random_number);
+                        
+                        if(random_number==6){  //checking the repeat chance for a user
+                            repeat_chance++;
+                            if(repeat_chance==3){
+                                repeat_chance=0;
+                                player_chance++;
+                            }
+                            handler(); 
+                        } else {
+                            repeat_chance=0;
+                            player_chance++;
+                            handler(); 
+                        }    
+                    }
+                    
+                }, 1000);
+            }
+            
+            let throwdice = function(){
+                clearInterval(countdown);
+                $('#countdown').html(0);
+                let random_number = Math.round(Math.random()*5) + 1;
+                $('#'+player_chance).html(parseInt(random_number) + parseInt($('#'+player_chance).html()));
+                alert(random_number);
+                if(random_number==6){ //checking the repeat chance for a user
+                    repeat_chance++;
+                    if(repeat_chance==3){ 
+                        repeat_chance=0;
+                        player_chance++;
+                    }
+                    handler(); 
+                } else {
+                    repeat_chance=0;
+                    player_chance++;
+                    handler(); 
+                }                 
+            }
+            $(function() {
+                handler(); 
+            });
+            
+        </script>
+    </body>
+</html>
